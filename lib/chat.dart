@@ -4,11 +4,10 @@ import 'package:websocket_manager/websocket_manager.dart';
 
 class Chat extends StatefulWidget {
   final String title;
-  final WebsocketManager manager;
-  Chat({Key key, @required this.title, @required this.manager})
-      : super(key: key) {
+  final WebsocketManager manager =
+      WebsocketManager('ws://play.norskfivepd.net');
+  Chat({Key key, @required this.title}) : super(key: key) {
     print(title);
-    print(manager);
     manager.connect();
   }
 
@@ -19,11 +18,20 @@ class Chat extends StatefulWidget {
 class ChatState extends State<Chat> {
   TextEditingController _controller = TextEditingController();
 
-  final List<Text> messages = new List<Text>();
+  final List<Widget> messages = new List<Widget>();
 
   void onMessage(dynamic message) {
     setState(() {
-      messages.add(Text('$message'));
+      messages.add(Center(
+          child: Container(
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(6.0),
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.black)),
+              child: Text('$message',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24))))); //Text('$message'));
     });
   }
 
@@ -76,7 +84,7 @@ class ChatState extends State<Chat> {
 
   @override
   void dispose() {
-    widget.manager.send('CLOSE CONNECTION');
+    widget.manager.close();
     super.dispose();
   }
 }
