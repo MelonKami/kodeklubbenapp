@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "783171626022",
+    "firebase_url": "https://kodeklubben-dc56f.firebaseio.com",
+    "project_id": "kodeklubben-dc56f",
+    "storage_bucket": "kodeklubben-dc56f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783171626022:android:6bc16179869f4fd8df72e7",
+        "android_client_info": {
+          "package_name": "com.example.kodeklubben"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783171626022-mcntlt8hi993ksqdpnmcgso56l19kpdu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA26_FEvJtRHlNcTVEZ7mGJ748nZVpqdDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783171626022-mcntlt8hi993ksqdpnmcgso56l19kpdu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
