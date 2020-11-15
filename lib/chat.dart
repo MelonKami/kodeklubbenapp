@@ -5,17 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:kodeklubben/websocket.dart';
 
 class Chat extends StatefulWidget {
-  Future<void> receiveMessages() {
-    return Future.delayed(Duration(seconds: 5), () {
-      WebsocketInstance.manager.send(
-        jsonEncode({'event': 'fetchMessages'}),
-      );
-    });
-  }
+  // Future<void> receiveMessages() {
+  //   print('fetchingMessages');
+  //   return Future.delayed(Duration(seconds: 5), () {
+  //     WebsocketInstance.manager.send(
+  //       jsonEncode({'event': 'fetchMessages'}),
+  //     );
+  //   });
+  // }
 
-  Chat() {
-    receiveMessages();
-  }
+  // Chat() {
+  //   receiveMessages();
+  // }
   @override
   State<StatefulWidget> createState() => ChatState();
 }
@@ -23,19 +24,33 @@ class Chat extends StatefulWidget {
 class ChatState extends State<Chat> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = new ScrollController();
+  Future<void> receiveMessages() {
+    print('fetchingMessages');
+    return Future.delayed(Duration(seconds: 2), () {
+      WebsocketInstance.manager.send(
+        jsonEncode({'event': 'fetchMessages'}),
+      );
+    });
+  }
+
+  ChatState() {
+    receiveMessages();
+  }
 
   final List<Widget> messages = new List<Widget>();
 
   void onMessage(dynamic message) {
     print(message);
-    print('onMessage');
     if (message == '/clearChat') {
       setState(() {
+        print('/clearChat was called');
         messages.clear();
       });
+    }
+    if (message == 'True') {
+      print('Catched True, won\'t add to messages');
     } else {
       setState(() {
-        print('Adding message to list, set state');
         messages.add(
           Center(
             child: Container(
@@ -67,13 +82,13 @@ class ChatState extends State<Chat> {
     WebsocketInstance.manager.onClose(this.onClose);
     WebsocketInstance.manager.onMessage(this.onMessage);
 
-    Timer(Duration(seconds: 1), () {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 300),
-      );
-    });
+    // Timer(Duration(seconds: 1), () {
+    //   _scrollController.animateTo(
+    //     _scrollController.position.maxScrollExtent,
+    //     curve: Curves.easeOut,
+    //     duration: const Duration(milliseconds: 300),
+    //   );
+    // });
 
     if (FirebaseAuth.instance.currentUser() != null) {
       return Scaffold(
@@ -93,11 +108,13 @@ class ChatState extends State<Chat> {
                   onPressed: () {
                     _clearChat();
                   },
-                  child: Text('Clear Chat')),
+                  child: Text('Fjern alle meldinger - Dev')),
               Flexible(
-                child:
-                    ListView(controller: _scrollController, children: messages),
-              ),
+                  child: Column(
+                children: messages,
+              )
+                  // ListView(controller: _scrollController, children: messages),
+                  ),
               // Implement this - SingleChildScrollView
             ],
           ),
@@ -122,6 +139,7 @@ class ChatState extends State<Chat> {
   }
 
   void _clearChat() {
+    print('clearing list');
     setState(() {
       messages.clear();
       WebsocketInstance.manager
@@ -133,10 +151,12 @@ class ChatState extends State<Chat> {
     if (_controller.text.isNotEmpty) {
       print('Sending message');
       print(_controller.text);
-      WebsocketInstance.manager.send(jsonEncode({
-        'event': 'SendChatMessage',
-        'data': {'msg': _controller.text, 'author': 'MelonKami'}
-      }));
+      WebsocketInstance.manager.send(jsonEncode(
+        {
+          'event': 'SendChatMessage',
+          'data': {'msg': _controller.text, 'author': 'MelonKami'}
+        },
+      ));
     }
   }
 

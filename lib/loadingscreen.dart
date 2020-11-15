@@ -85,7 +85,7 @@ class LoadingScreenState extends State<LoadingScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Laster inn (Det kan hende at du må oppdatere appen! Eller så kan det hende at serveren er nede)',
+                'Laster inn (Det kan hende at serveren er nede eller at din app versjon er for gammel)',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
