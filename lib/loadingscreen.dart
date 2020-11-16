@@ -5,7 +5,7 @@ import 'package:kodeklubben/websocket.dart';
 import 'homepage.dart';
 
 class LoadingScreen extends StatefulWidget {
-  final int version = 11;
+  final int version = 12;
 
   LoadingScreen() {
     print('Starting connection Loadingscreen');
@@ -36,7 +36,7 @@ class LoadingScreenState extends State<LoadingScreen> {
   }
 
   void onMessage(dynamic message) {
-    print(message);
+    //print(message);
     if (message == 'True') {
       setState(() {
         launch = true;

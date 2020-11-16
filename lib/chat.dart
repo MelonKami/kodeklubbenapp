@@ -24,6 +24,20 @@ class Chat extends StatefulWidget {
 class ChatState extends State<Chat> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = new ScrollController();
+
+  String isUserLoggedIn() {
+    FirebaseAuth.instance.currentUser().then((firebaseUser) {
+      print(firebaseUser);
+      if (firebaseUser == null) {
+        print('Returning False');
+        return 'false';
+      } else {
+        print('Returning True');
+        return 'true';
+      }
+    });
+  }
+
   Future<void> receiveMessages() {
     print('fetchingMessages');
     return Future.delayed(Duration(seconds: 2), () {
@@ -41,11 +55,9 @@ class ChatState extends State<Chat> {
 
   void onMessage(dynamic message) {
     print(message);
-    if (message == 'True'){
+    if (message == 'True') {
       print('Catched True, not adding to chat');
-
-    }
-    else if (message == '/clearChat') {
+    } else if (message == '/clearChat') {
       setState(() {
         print('/clearChat was called');
         messages.clear();
@@ -91,8 +103,20 @@ class ChatState extends State<Chat> {
     //     duration: const Duration(milliseconds: 300),
     //   );
     // });
-
-    if (FirebaseAuth.instance.currentUser() != null) {
+    print(isUserLoggedIn());
+    if (isUserLoggedIn() != null) {
+      print('Running as logged out');
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[Column(children: messages)],
+          ),
+        ),
+      );
+    } else {
+      print('Running as logged in');
       return Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -127,22 +151,13 @@ class ChatState extends State<Chat> {
           child: Icon(Icons.send),
         ),
       );
-    } else {
-      return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[Column(children: messages)],
-          ),
-        ),
-      );
     }
   }
 
   void _clearChat() {
     print('clearing list');
     setState(() {
+      messages.clear();
       WebsocketInstance.manager
           .send(jsonEncode({'event': 'clearChatMessages'}));
     });

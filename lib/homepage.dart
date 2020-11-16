@@ -10,8 +10,9 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   int _selectedPage = 0;
   final List<Widget> _pageOptions = [
-    Text('test'),
-    Chat()
+    Text('Her blir det en hjemmeside med kode relevante informasjoner'),
+    Chat(),
+    LoggInn()
   ]; //HomePage(), Chat(title: 'Felles Chat')];
 
   @override
@@ -20,7 +21,7 @@ class HomePageState extends State<HomePage> {
       title: 'Kodeklubben',
       //theme: ThemeData(primarySwatch: Colors.black),
       home: Scaffold(
-        backgroundColor: Colors.grey[800],
+        //backgroundColor: Colors.grey[800],
         appBar: AppBar(
           title: Text('Kodeklubben!'),
           backgroundColor: Colors.black,
@@ -44,48 +45,14 @@ class HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: 'Chat',
-                backgroundColor: Colors.black)
+                backgroundColor: Colors.black),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.login),
+                label: 'Logg inn med google',
+                backgroundColor: Colors.yellow)
           ],
         ),
       ),
     );
   }
 }
-//             Column(children: [
-//               FlatButton(
-//                 child: Text(
-//                   'Chat',
-//                 ),
-//                 color: Colors.grey,
-//                 onPressed: () {
-//                   Navigator.push(
-//                     ctx,
-//                     MaterialPageRoute(
-//                       builder: (ctx) => Chat(
-//                         title: 'Kodeklubben',
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               ),
-//               FlatButton(
-//                 child: Text('Kalender | IKKE KLAR'),
-//                 color: Colors.grey,
-//                 onPressed: () {
-//                   Navigator.push(
-//                       ctx, MaterialPageRoute(builder: (ctx) => Calendar()));
-//                 },
-//               ),
-//               FlatButton(
-//                 child: Text(
-//                   'Logg inn/registrer',
-//                 ),
-//                 color: Colors.grey,
-//                 onPressed: () {
-//                   Navigator.push(
-//                       ctx, MaterialPageRoute(builder: (ctx) => LoggInn()));
-//                 },
-//               )
-//             ])));
-//   }
-// }
