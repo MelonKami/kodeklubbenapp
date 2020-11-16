@@ -6,4 +6,5 @@ class WebsocketInstance {
   WebsocketInstance() {
     manager.connect();
   }
+
 }

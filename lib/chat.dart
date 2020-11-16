@@ -41,15 +41,17 @@ class ChatState extends State<Chat> {
 
   void onMessage(dynamic message) {
     print(message);
-    if (message == '/clearChat') {
+    if (message == 'True'){
+      print('Catched True, not adding to chat');
+
+    }
+    else if (message == '/clearChat') {
       setState(() {
         print('/clearChat was called');
         messages.clear();
       });
-    }
-    if (message == 'True') {
-      print('Catched True, won\'t add to messages');
     } else {
+      print('else');
       setState(() {
         messages.add(
           Center(
@@ -108,7 +110,7 @@ class ChatState extends State<Chat> {
                   onPressed: () {
                     _clearChat();
                   },
-                  child: Text('Fjern alle meldinger - Dev')),
+                  child: Text('Clear Chat - Midlertidig funksjon')),
               Flexible(
                   child: Column(
                 children: messages,
@@ -141,7 +143,6 @@ class ChatState extends State<Chat> {
   void _clearChat() {
     print('clearing list');
     setState(() {
-      messages.clear();
       WebsocketInstance.manager
           .send(jsonEncode({'event': 'clearChatMessages'}));
     });
