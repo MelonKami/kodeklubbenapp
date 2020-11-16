@@ -25,18 +25,30 @@ class ChatState extends State<Chat> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = new ScrollController();
 
-  String isUserLoggedIn() {
-    FirebaseAuth.instance.currentUser().then((firebaseUser) {
-      print(firebaseUser);
-      if (firebaseUser == null) {
-        print('Returning False');
-        return 'false';
-      } else {
-        print('Returning True');
-        return 'true';
-      }
-    });
+  bool isUserLoggedIn() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
+
+  // Future isUserLoggedIn() {
+  //   FirebaseAuth.instance.currentUser().then(
+  //     (firebaseUser) {
+  //       print(firebaseUser);
+  //       if (firebaseUser == null) {
+  //         return false;
+  //         //print('Returning False');
+  //         //return false;
+  //       } else {
+  //         return true;
+  //         //print('Returning True');
+  //         //return true;
+  //       }
+  //     },
+  //   );
+  // }
 
   Future<void> receiveMessages() {
     print('fetchingMessages');
@@ -56,14 +68,11 @@ class ChatState extends State<Chat> {
   void onMessage(dynamic message) {
     print(message);
     if (message == 'True') {
-      print('Catched True, not adding to chat');
     } else if (message == '/clearChat') {
       setState(() {
-        print('/clearChat was called');
         messages.clear();
       });
     } else {
-      print('else');
       setState(() {
         messages.add(
           Center(
@@ -103,8 +112,8 @@ class ChatState extends State<Chat> {
     //     duration: const Duration(milliseconds: 300),
     //   );
     // });
-    print(isUserLoggedIn());
-    if (isUserLoggedIn() != null) {
+    print('return $isUserLoggedIn()');
+    if (!isUserLoggedIn()) {
       print('Running as logged out');
       return Scaffold(
         body: Padding(

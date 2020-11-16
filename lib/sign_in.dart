@@ -1,29 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseAuth auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
-Future<String> signInWithGoogle() async {
+Future<User> signInWithGoogle() async {
+  //await Firebase.initializeApp();
+
+  // try {
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
 
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
+  final AuthCredential credential = GoogleAuthProvider.credential(
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
   );
 
-  final AuthResult authResult = await _auth.signInWithCredential(credential);
-  final FirebaseUser user = authResult.user;
+  final UserCredential authResult = await auth.signInWithCredential(credential);
+  final User user = authResult.user;
 
   assert(!user.isAnonymous);
   assert(await user.getIdToken() != null);
 
-  final FirebaseUser currentUser = await _auth.currentUser();
-  assert(user.uid == currentUser.uid);
+  final User _currentUser = auth.currentUser;
+  assert(user.uid == _currentUser.uid);
 
-  return 'signInWithGoogle succeeded: $user';
+  print('signInWithGoogle succeeded: ${user.uid}');
+  return user;
+  // } catch (e) {
+  //   print('sing in error: $e');
+  //   // print('sign in error');
+  //   return null;
+  // }
 }
 
 void signOutGoogle() async {
