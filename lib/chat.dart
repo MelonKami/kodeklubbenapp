@@ -3,20 +3,9 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kodeklubben/websocket.dart';
+import 'package:kodeklubben/sign_in.dart';
 
 class Chat extends StatefulWidget {
-  // Future<void> receiveMessages() {
-  //   print('fetchingMessages');
-  //   return Future.delayed(Duration(seconds: 5), () {
-  //     WebsocketInstance.manager.send(
-  //       jsonEncode({'event': 'fetchMessages'}),
-  //     );
-  //   });
-  // }
-
-  // Chat() {
-  //   receiveMessages();
-  // }
   @override
   State<StatefulWidget> createState() => ChatState();
 }
@@ -32,23 +21,6 @@ class ChatState extends State<Chat> {
       return false;
     }
   }
-
-  // Future isUserLoggedIn() {
-  //   FirebaseAuth.instance.currentUser().then(
-  //     (firebaseUser) {
-  //       print(firebaseUser);
-  //       if (firebaseUser == null) {
-  //         return false;
-  //         //print('Returning False');
-  //         //return false;
-  //       } else {
-  //         return true;
-  //         //print('Returning True');
-  //         //return true;
-  //       }
-  //     },
-  //   );
-  // }
 
   Future<void> receiveMessages() {
     print('fetchingMessages');
@@ -66,21 +38,47 @@ class ChatState extends State<Chat> {
   final List<Widget> messages = new List<Widget>();
 
   void onMessage(dynamic message) {
+    dynamic data = jsonDecode(message);
     print(message);
-    if (message == 'True') {
+    // print(data.event);
+    // switch (data.event) {
+    //   case '':
+    //     {}
+    // }
+    if (data == 'True') {
     } else if (message == '/clearChat') {
       setState(() {
         messages.clear();
       });
     } else {
+      print('onMessage');
       setState(() {
+        // if (data.user) {
+        //   messages.add(
+        //     (Center(
+        //       child: Container(
+        //         margin: const EdgeInsets.all(10.0),
+        //         padding: const EdgeInsets.all(6.0),
+        //         decoration: BoxDecoration(
+        //           border: Border.all(color: Colors.black),
+        //           borderRadius: BorderRadius.circular(12),
+        //         ),
+        //         child: Text(
+        //           '$data',
+        //           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        //         ),
+        //       ),
+        //     )),
+        //   );
+        // }
         messages.add(
           Center(
             child: Container(
               margin: const EdgeInsets.all(10.0),
               padding: const EdgeInsets.all(6.0),
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
+                  color: Colors.blue,
+                  //border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(12)),
               child: Text(
                 '$message',
@@ -112,7 +110,6 @@ class ChatState extends State<Chat> {
     //     duration: const Duration(milliseconds: 300),
     //   );
     // });
-    print('return $isUserLoggedIn()');
     if (!isUserLoggedIn()) {
       print('Running as logged out');
       return Scaffold(
@@ -173,15 +170,21 @@ class ChatState extends State<Chat> {
   }
 
   void _sendMessage() {
+    print('Sending Message');
     if (_controller.text.isNotEmpty) {
       print('Sending message');
       print(_controller.text);
-      WebsocketInstance.manager.send(jsonEncode(
-        {
-          'event': 'SendChatMessage',
-          'data': {'msg': _controller.text, 'author': 'MelonKami'}
-        },
-      ));
+      WebsocketInstance.manager.send(
+        jsonEncode(
+          {
+            'event': 'SendChatMessage',
+            'data': {
+              'msg': _controller.text,
+              'author': FirebaseAuth.instance.currentUser.displayName
+            }
+          },
+        ),
+      );
     }
   }
 
